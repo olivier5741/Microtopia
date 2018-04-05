@@ -6,7 +6,7 @@ Combination of MicroService and Utopia or how I would like a microservice to be 
 
 This is how I would see a asp.net core controller/service in a microservice context (http or message queueing)
 
-```
+```c#
 public class EmergencyService : IService, IHandle<MessageReceived>, IHandle<AlarmElapsed>
 {
     private readonly IDb _db;
