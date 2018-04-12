@@ -7,8 +7,9 @@ using EasyNetQ;
 using MediatR;
 using Microtopia.Api;
 using Microtopia.Dto;
-using NetCoreUtopia;
 using ServiceStack;
+using ServiceStack.Data;
+using ServiceStack.OrmLite;
 using StructureMap;
 using Xunit;
 
@@ -34,7 +35,16 @@ namespace Microtopia.Tests
                         typeof(IRequestHandler<,>)); // Handlers with a response
                     scanner.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
                 });
-                cfg.For<IDb>().Use<DummyDb>().Singleton();
+
+                var db = new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider);
+
+                using (var sess = db.Open())
+                {
+                    sess.CreateTable<Emergency>();
+                }
+
+                cfg.For<IDbConnectionFactory>().Use(db).Singleton();
+                //cfg.For<IDbConnection>().Use(c => c.GetInstance<IDbConnectionFactory>().CreateDbConnection());
                 cfg.For<IBus>().Use(RabbitHutch.CreateBus("host=localhost;username=guest;password=guest")).Singleton();
                 cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => ctx.GetInstance);
                 cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => ctx.GetAllInstances);

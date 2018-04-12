@@ -1,29 +1,37 @@
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microtopia.Dto;
-using NetCoreUtopia;
 using ServiceStack;
+using ServiceStack.Data;
+using ServiceStack.OrmLite;
 
 namespace Microtopia.Api
 {
     [Controller]
-    [Route("/emergency")]
-    public class EmergencyService : INotificationHandler<ChannelMessageReceived>, INotificationHandler<AlarmElapsed>
+    [Microsoft.AspNetCore.Mvc.Route("/emergency")]
+    public class EmergencyService : INotificationHandler<ChannelMessageReceived>, INotificationHandler<AlarmElapsed>,
+        IDisposable
     {
-        private readonly IDb _db;
+        private readonly IDbConnection _db;
         private readonly IMediator _gateway;
 
-        public EmergencyService(IDb db, IMediator gateway)
+        public EmergencyService(IDbConnectionFactory dbConnectionFactory, IMediator gateway)
         {
-            _db = db;
+            _db = dbConnectionFactory.Open();
             _gateway = gateway;
         }
 
         private TimeSpan WaitBetweenMediumMessage { get; } = TimeSpan.FromSeconds(5);
+
+        public void Dispose()
+        {
+            _db?.Dispose();
+        }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task Handle(AlarmElapsed @event, CancellationToken cancellationToken)
