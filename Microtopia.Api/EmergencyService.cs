@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microtopia.Dto;
 using NetCoreUtopia;
+using ServiceStack;
 
 namespace Microtopia.Api
 {
@@ -75,6 +76,10 @@ namespace Microtopia.Api
 
             emergency.Status = EmergencyStatuses.Done;
             _db.Save(emergency);
+
+            var emergencyFinished = emergency.ConvertTo<EmergencyFinished>();
+            emergencyFinished.Time = DateTime.Now;
+            await _gateway.Publish(emergencyFinished, cancellationToken);
         }
 
         [HttpPost]

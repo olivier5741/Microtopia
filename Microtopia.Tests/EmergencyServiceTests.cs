@@ -21,7 +21,7 @@ namespace Microtopia.Tests
             {
                 cfg.Scan(scanner =>
                 {
-                    scanner.AssemblyContainingType<DummyCommandAndEventSink>();
+                    scanner.AssemblyContainingType<DummyDb>();
                     scanner.AssemblyContainingType<EmergencyService>();
                     scanner.ConnectImplementationsToTypesClosing(
                         typeof(IRequestHandler<>)); // Handlers with no response
