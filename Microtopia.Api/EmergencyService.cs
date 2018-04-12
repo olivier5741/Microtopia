@@ -1,10 +1,13 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microtopia.Dto;
 using NetCoreUtopia;
 
-namespace Microtopia.Tests
+namespace Microtopia.Api
 {
+    [Controller]
+    [Route("/emergency")]
     public class EmergencyService : IService, IHandle<MessageReceived>, IHandle<AlarmElapsed>
     {
         private readonly IDb _db;
@@ -18,11 +21,13 @@ namespace Microtopia.Tests
             _gateway = gateway;
         }
 
+        [HttpGet]
         public Emergency Get(Emergency request)
         {
             return _db.SingleById<Emergency>(request.Id);
         }
 
+        [HttpPost]
         public Emergency Post(Emergency request)
         {
             request.Status = EmergencyStatuses.Todo;
@@ -48,6 +53,7 @@ namespace Microtopia.Tests
             return request;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void Handle(MessageReceived @event)
         {
             // ReSharper disable once PossibleInvalidOperationException
@@ -72,6 +78,7 @@ namespace Microtopia.Tests
             _db.Save(emergency);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void Handle(AlarmElapsed @event)
         {
             // ReSharper disable once PossibleInvalidOperationException

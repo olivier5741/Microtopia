@@ -1,4 +1,4 @@
-namespace Microtopia.Tests
+namespace Microtopia.Api
 {
     public static class Converter
     {

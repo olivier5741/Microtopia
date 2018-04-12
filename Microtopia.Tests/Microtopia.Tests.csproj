@@ -9,6 +9,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Microtopia.Api\Microtopia.Api.csproj" />
     <ProjectReference Include="..\Microtopia.Dto\Microtopia.Dto.csproj" />
     <ProjectReference Include="..\NetCoreUtopia\NetCoreUtopia.csproj" />
   </ItemGroup>
