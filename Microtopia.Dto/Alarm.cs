@@ -1,6 +1,5 @@
 using System;
 using MediatR;
-using NetCoreUtopia;
 
 namespace Microtopia.Dto
 {

@@ -16,14 +16,67 @@ namespace Microtopia.Api
         private readonly IDb _db;
         private readonly IMediator _gateway;
 
-        private TimeSpan WaitBetweenMediumMessage { get; } = TimeSpan.FromMinutes(1);
-
         public EmergencyService(IDb db, IMediator gateway)
         {
             _db = db;
             _gateway = gateway;
         }
-        
+
+        private TimeSpan WaitBetweenMediumMessage { get; } = TimeSpan.FromMinutes(1);
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task Handle(AlarmElapsed @event, CancellationToken cancellationToken)
+        {
+            // ReSharper disable once PossibleInvalidOperationException
+            var emergency = Get(new Emergency {Id = @event.Flow.Id.Value});
+
+            if (emergency.Status == EmergencyStatuses.Done)
+                return;
+
+            var emergencyFlow = @event.Flow.Data.ConvertTo<EmergencyFlow>();
+            var medium = emergency.Mediums.Single(m => m.Id == emergencyFlow.MediumId);
+
+            await _gateway.Send(new ChannelMessage
+            {
+                Message = emergency.Message,
+                Address = medium.Address,
+                Flow = @event.Flow
+            }, cancellationToken);
+
+            emergency.Events.Add(new EmergencyEvent
+            {
+                Name = "MessageSent",
+                MediumId = emergencyFlow.MediumId
+            });
+
+            _db.Save(emergency);
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task Handle(ChannelMessageReceived @event, CancellationToken cancellationToken)
+        {
+            // ReSharper disable once PossibleInvalidOperationException
+            var emergency = Get(new Emergency {Id = @event.Flow.Id.Value});
+
+            var emergencyFlow = @event.Flow.Data.ConvertTo<EmergencyFlow>();
+
+            emergency.Events.Add(new EmergencyEvent
+            {
+                Name = "MessageReceived",
+                MediumId = emergencyFlow.MediumId
+            });
+
+            _db.Save(emergency);
+
+            if (emergency.Status == EmergencyStatuses.Done)
+                return;
+
+            await _gateway.Send(new AlarmCancel {Flow = new ChannelFlow {Id = emergency.Id}}, cancellationToken);
+
+            emergency.Status = EmergencyStatuses.Done;
+            _db.Save(emergency);
+        }
+
         [HttpPost]
         public async Task<Emergency> Post([FromBody] Emergency request)
         {
@@ -54,59 +107,6 @@ namespace Microtopia.Api
         public Emergency Get(Emergency request)
         {
             return _db.SingleById<Emergency>(request.Id);
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task Handle(ChannelMessageReceived @event, CancellationToken cancellationToken)
-        {
-            // ReSharper disable once PossibleInvalidOperationException
-            var emergency = Get(new Emergency {Id = @event.Flow.Id.Value});
-
-            var emergencyFlow = @event.Flow.Data.ConvertTo<EmergencyFlow>();
-
-            emergency.Events.Add(new EmergencyEvent
-            {
-                Name = "MessageReceived",
-                MediumId = emergencyFlow.MediumId
-            });
-
-            _db.Save(emergency);
-
-            if (emergency.Status == EmergencyStatuses.Done)
-                return;
-
-            await _gateway.Send(new AlarmCancel {Flow = new ChannelFlow {Id = emergency.Id}}, cancellationToken);
-
-            emergency.Status = EmergencyStatuses.Done;
-            _db.Save(emergency);
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task Handle(AlarmElapsed @event, CancellationToken cancellationToken)
-        {
-            // ReSharper disable once PossibleInvalidOperationException
-            var emergency = Get(new Emergency {Id = @event.Flow.Id.Value});
-
-            if (emergency.Status == EmergencyStatuses.Done)
-                return;
-
-            var emergencyFlow = @event.Flow.Data.ConvertTo<EmergencyFlow>();
-            var medium = emergency.Mediums.Single(m => m.Id == emergencyFlow.MediumId);
-
-            await _gateway.Send(new ChannelMessage
-            {
-                Message = emergency.Message,
-                Address = medium.Address,
-                Flow = @event.Flow
-            }, cancellationToken);
-
-            emergency.Events.Add(new EmergencyEvent
-            {
-                Name = "MessageSent",
-                MediumId = emergencyFlow.MediumId
-            });
-
-            _db.Save(emergency);
         }
     }
 }
