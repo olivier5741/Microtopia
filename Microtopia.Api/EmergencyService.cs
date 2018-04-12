@@ -23,7 +23,7 @@ namespace Microtopia.Api
             _gateway = gateway;
         }
 
-        private TimeSpan WaitBetweenMediumMessage { get; } = TimeSpan.FromMinutes(1);
+        private TimeSpan WaitBetweenMediumMessage { get; } = TimeSpan.FromSeconds(5);
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task Handle(AlarmElapsed @event, CancellationToken cancellationToken)

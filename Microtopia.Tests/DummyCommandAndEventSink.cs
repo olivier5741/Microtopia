@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using EasyNetQ;
+using EasyNetQ.NonGeneric;
 using MediatR;
 using Microtopia.Dto;
 
@@ -10,13 +12,16 @@ using Microtopia.Dto;
 namespace Microtopia.Tests
 {
     // TODO implement IRequestHandler<IRequest> for response
-    public class DummyCommandAndEventSink : INotificationHandler<INotification>, IRequestHandler<IRequest>
+    public class DummyCommandAndEventSink<TNotification> : INotificationHandler<INotification>,
+        IRequestHandler<IRequest>
     {
+        private readonly IBus _bus;
         private readonly IMediator _gateway;
 
-        public DummyCommandAndEventSink(IMediator gateway)
+        public DummyCommandAndEventSink(IMediator gateway, IBus bus)
         {
             _gateway = gateway;
+            _bus = bus;
         }
 
         public Dictionary<Type, string> Routes { get; set; } = new Dictionary<Type, string>
@@ -38,7 +43,7 @@ namespace Microtopia.Tests
             Send(@event);
         }
 
-        private void Send(object @event)
+        private void Send<T>(T @event) where T : class
         {
             var type = @event.GetType();
             if (Routes.ContainsKey(type) == false)
@@ -47,6 +52,9 @@ namespace Microtopia.Tests
             switch (Routes[type])
             {
                 default:
+
+                    _bus.Publish(type, @event);
+
                     Console.WriteLine("Publish to external bus : " + @event);
                     break;
             }

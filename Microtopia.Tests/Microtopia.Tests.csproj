@@ -4,7 +4,8 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-      <PackageReference Include="MediatR" Version="4.1.0"/>
+    <PackageReference Include="EasyNetQ" Version="2.3.1"/>
+    <PackageReference Include="MediatR" Version="4.1.0"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
@@ -14,9 +15,9 @@
     <ProjectReference Include="..\Microtopia.Dto\Microtopia.Dto.csproj" />
     <ProjectReference Include="..\NetCoreUtopia\NetCoreUtopia.csproj" />
   </ItemGroup>
-    <ItemGroup>
-        <Reference Include="StructureMap, Version=4.6.1.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\..\..\..\.nuget\packages\structuremap\4.6.1\lib\netstandard2.0\StructureMap.dll</HintPath>
-        </Reference>
-    </ItemGroup>
+  <ItemGroup>
+    <Reference Include="StructureMap, Version=4.6.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\.nuget\packages\structuremap\4.6.1\lib\netstandard2.0\StructureMap.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
