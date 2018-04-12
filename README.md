@@ -85,7 +85,7 @@ public class EmergencyService : IService, IHandle<MessageReceived>, IHandle<Alar
 
 ## Implementation : MediatR
 
-```
+```c#
 [Controller]
 [Route("/emergency")]
 public class EmergencyService : INotificationHandler<ChannelMessageReceived>, INotificationHandler<AlarmElapsed>
