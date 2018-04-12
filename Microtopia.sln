@@ -1,12 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microtopia.Tests", "Microtopia.Tests\Microtopia.Tests.csproj", "{F0946502-1A6D-4B41-912D-18A9E0EA7236}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microtopia.Tests", "Microtopia.Tests\Microtopia.Tests.csproj", "{F0946502-1A6D-4B41-912D-18A9E0EA7236}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microtopia.Dto", "Microtopia.Dto\Microtopia.Dto.csproj", "{7902C0EA-520B-48E0-B71A-5B2B00476CF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microtopia.Dto", "Microtopia.Dto\Microtopia.Dto.csproj", "{7902C0EA-520B-48E0-B71A-5B2B00476CF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreUtopia", "NetCoreUtopia\NetCoreUtopia.csproj", "{54A5E0EC-B781-4B09-B820-46C26AACF21C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreUtopia", "NetCoreUtopia\NetCoreUtopia.csproj", "{54A5E0EC-B781-4B09-B820-46C26AACF21C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microtopia.Api", "Microtopia.Api\Microtopia.Api.csproj", "{F4D147EB-1353-413C-A2B6-F446B1D24553}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microtopia.Api", "Microtopia.Api\Microtopia.Api.csproj", "{F4D147EB-1353-413C-A2B6-F446B1D24553}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{002D4514-674D-49AC-BFA8-3FC096D5ADD8}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +38,11 @@ Global
 		{F4D147EB-1353-413C-A2B6-F446B1D24553}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4D147EB-1353-413C-A2B6-F446B1D24553}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4D147EB-1353-413C-A2B6-F446B1D24553}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3156A6D0-9D88-4636-9B92-DFC38C3FD472}
 	EndGlobalSection
 EndGlobal
