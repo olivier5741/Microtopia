@@ -1,8 +1,9 @@
+using MediatR;
 using NetCoreUtopia;
 
 namespace Microtopia.Dto
 {
-    public class MessageReceived : IEvent
+    public class ChannelMessageReceived : INotification
     {
         public ChannelFlow Flow { get; set; }
     }

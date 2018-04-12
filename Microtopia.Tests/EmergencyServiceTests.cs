@@ -1,7 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using MediatR;
 using Microtopia.Api;
 using Microtopia.Dto;
+using NetCoreUtopia;
+using StructureMap;
 using Xunit;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -12,14 +16,32 @@ namespace Microtopia.Tests
     public class EmergencyServiceTests
     {
         private readonly EmergencyService _service;
+        private readonly IMediator _gateway;
 
         public EmergencyServiceTests()
         {
-            _service = new EmergencyService(new DummyDb(), new DummyGateway());
+            var container = new Container(cfg =>
+            {
+                cfg.Scan(scanner =>
+                {
+                    scanner.AssemblyContainingType<DummyCommandAndEventSink>();
+                    scanner.AssemblyContainingType<EmergencyService>();
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<>)); // Handlers with no response
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>)); // Handlers with a response
+                    scanner.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
+                });
+                cfg.For<IDb>().Use<DummyDb>().Singleton();
+                cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => (ctx.GetInstance));
+                cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => ctx.GetAllInstances);
+                cfg.For<IMediator>().Use<Mediator>();
+            });
+
+            _gateway = container.GetInstance<IMediator>();
+            _service = container.GetInstance<EmergencyService>();;
         }
 
         [Fact]
-        public void FirstMediumReplies()
+        public async void FirstMediumReplies()
         {
             var emergency = new Emergency
             {
@@ -37,9 +59,9 @@ namespace Microtopia.Tests
                 }
             };
 
-            _service.Post(emergency);
+            await _service.Post(emergency);
 
-            _service.Handle(new AlarmElapsed
+            await _gateway.Publish(new AlarmElapsed
             {
                 Flow = new ChannelFlow
                 {
@@ -51,7 +73,7 @@ namespace Microtopia.Tests
                 }
             });
 
-            _service.Handle(new MessageReceived
+            await _gateway.Publish(new ChannelMessageReceived
             {
                 Flow = new ChannelFlow
                 {

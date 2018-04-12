@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microtopia.Dto;
 using NetCoreUtopia;
@@ -8,27 +11,21 @@ namespace Microtopia.Api
 {
     [Controller]
     [Route("/emergency")]
-    public class EmergencyService : IService, IHandle<MessageReceived>, IHandle<AlarmElapsed>
+    public class EmergencyService : INotificationHandler<ChannelMessageReceived>, INotificationHandler<AlarmElapsed>
     {
         private readonly IDb _db;
-        private readonly IGateway _gateway;
+        private readonly IMediator _gateway;
 
         private TimeSpan WaitBetweenMediumMessage { get; } = TimeSpan.FromMinutes(1);
 
-        public EmergencyService(IDb db, IGateway gateway)
+        public EmergencyService(IDb db, IMediator gateway)
         {
             _db = db;
             _gateway = gateway;
         }
-
-        [HttpGet]
-        public Emergency Get(Emergency request)
-        {
-            return _db.SingleById<Emergency>(request.Id);
-        }
-
+        
         [HttpPost]
-        public Emergency Post(Emergency request)
+        public async Task<Emergency> Post([FromBody] Emergency request)
         {
             request.Status = EmergencyStatuses.Todo;
             _db.Save(request);
@@ -37,7 +34,7 @@ namespace Microtopia.Api
 
             foreach (var medium in request.Mediums)
             {
-                _gateway.Send(new Alarm
+                await _gateway.Send(new Alarm
                 {
                     Time = now,
                     Flow = new ChannelFlow {Id = request.Id, Data = new EmergencyFlow {MediumId = medium.Id}}
@@ -53,8 +50,14 @@ namespace Microtopia.Api
             return request;
         }
 
+        [HttpGet("{id}")]
+        public Emergency Get(Emergency request)
+        {
+            return _db.SingleById<Emergency>(request.Id);
+        }
+
         [ApiExplorerSettings(IgnoreApi = true)]
-        public void Handle(MessageReceived @event)
+        public async Task Handle(ChannelMessageReceived @event, CancellationToken cancellationToken)
         {
             // ReSharper disable once PossibleInvalidOperationException
             var emergency = Get(new Emergency {Id = @event.Flow.Id.Value});
@@ -72,14 +75,14 @@ namespace Microtopia.Api
             if (emergency.Status == EmergencyStatuses.Done)
                 return;
 
-            _gateway.Send(new AlarmCancel {Flow = new ChannelFlow {Id = emergency.Id}});
+            await _gateway.Send(new AlarmCancel {Flow = new ChannelFlow {Id = emergency.Id}}, cancellationToken);
 
             emergency.Status = EmergencyStatuses.Done;
             _db.Save(emergency);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public void Handle(AlarmElapsed @event)
+        public async Task Handle(AlarmElapsed @event, CancellationToken cancellationToken)
         {
             // ReSharper disable once PossibleInvalidOperationException
             var emergency = Get(new Emergency {Id = @event.Flow.Id.Value});
@@ -90,12 +93,12 @@ namespace Microtopia.Api
             var emergencyFlow = @event.Flow.Data.ConvertTo<EmergencyFlow>();
             var medium = emergency.Mediums.Single(m => m.Id == emergencyFlow.MediumId);
 
-            _gateway.Send(new ChannelMessage
+            await _gateway.Send(new ChannelMessage
             {
                 Message = emergency.Message,
                 Address = medium.Address,
                 Flow = @event.Flow
-            });
+            }, cancellationToken);
 
             emergency.Events.Add(new EmergencyEvent
             {
