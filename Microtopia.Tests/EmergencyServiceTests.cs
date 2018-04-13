@@ -23,7 +23,7 @@ namespace Microtopia.Tests
             {
                 cfg.Scan(scanner =>
                 {
-                    scanner.AssemblyContainingType<DummyDb>();
+                    scanner.AssemblyContainingType<DummyCommandAndEventSink>();
                     scanner.AssemblyContainingType<EmergencyService>();
                     scanner.ConnectImplementationsToTypesClosing(
                         typeof(IRequestHandler<>)); // Handlers with no response
@@ -59,7 +59,7 @@ namespace Microtopia.Tests
 
         private readonly EmergencyService _service;
         private readonly IMediator _gateway;
-        private readonly IBus _bus;
+        private readonly IBus _bus; // TODO mock IBus
 
         [Fact]
         public async void FirstMediumReplies()

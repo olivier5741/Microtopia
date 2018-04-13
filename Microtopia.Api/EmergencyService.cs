@@ -93,6 +93,7 @@ namespace Microtopia.Api
         [HttpPost]
         public async Task<Emergency> Post([FromBody] Emergency request)
         {
+            request.Id = Guid.NewGuid();
             request.Status = EmergencyStatuses.Todo;
             _db.Save(request);
 

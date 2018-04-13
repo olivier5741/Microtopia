@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using MediatR;
-using NetCoreUtopia;
 
 namespace Microtopia.Dto
 {
-    public class EmergencyFinished : IHaveId, INotification
+    public class EmergencyFinished : INotification
     {
         public DateTime Time { get; set; }
         public string Message { get; set; }

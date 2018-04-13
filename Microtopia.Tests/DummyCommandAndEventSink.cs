@@ -12,7 +12,7 @@ using Microtopia.Dto;
 namespace Microtopia.Tests
 {
     // TODO implement IRequestHandler<IRequest> for response
-    public class DummyCommandAndEventSink<TNotification> : INotificationHandler<INotification>,
+    public class DummyCommandAndEventSink : INotificationHandler<INotification>,
         IRequestHandler<IRequest>
     {
         private readonly IBus _bus;

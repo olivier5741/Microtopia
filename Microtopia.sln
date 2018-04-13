@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microtopia.Tests", "Microto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microtopia.Dto", "Microtopia.Dto\Microtopia.Dto.csproj", "{7902C0EA-520B-48E0-B71A-5B2B00476CF5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreUtopia", "NetCoreUtopia\NetCoreUtopia.csproj", "{54A5E0EC-B781-4B09-B820-46C26AACF21C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microtopia.Api", "Microtopia.Api\Microtopia.Api.csproj", "{F4D147EB-1353-413C-A2B6-F446B1D24553}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{002D4514-674D-49AC-BFA8-3FC096D5ADD8}"
@@ -30,10 +28,6 @@ Global
 		{7902C0EA-520B-48E0-B71A-5B2B00476CF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7902C0EA-520B-48E0-B71A-5B2B00476CF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7902C0EA-520B-48E0-B71A-5B2B00476CF5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54A5E0EC-B781-4B09-B820-46C26AACF21C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54A5E0EC-B781-4B09-B820-46C26AACF21C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54A5E0EC-B781-4B09-B820-46C26AACF21C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54A5E0EC-B781-4B09-B820-46C26AACF21C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4D147EB-1353-413C-A2B6-F446B1D24553}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4D147EB-1353-413C-A2B6-F446B1D24553}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4D147EB-1353-413C-A2B6-F446B1D24553}.Release|Any CPU.ActiveCfg = Release|Any CPU

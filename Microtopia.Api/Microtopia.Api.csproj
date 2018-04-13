@@ -19,6 +19,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microtopia.Dto\Microtopia.Dto.csproj" />
-    <ProjectReference Include="..\NetCoreUtopia\NetCoreUtopia.csproj" />
   </ItemGroup>
 </Project>

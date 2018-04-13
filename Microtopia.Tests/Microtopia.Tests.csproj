@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Microtopia.Api\Microtopia.Api.csproj" />
     <ProjectReference Include="..\Microtopia.Dto\Microtopia.Dto.csproj" />
-    <ProjectReference Include="..\NetCoreUtopia\NetCoreUtopia.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="StructureMap, Version=4.6.1.0, Culture=neutral, PublicKeyToken=null">
