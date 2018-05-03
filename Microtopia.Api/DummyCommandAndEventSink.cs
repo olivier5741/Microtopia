@@ -9,7 +9,7 @@ using Microtopia.Dto;
 
 #pragma warning disable 1998
 
-namespace Microtopia.Tests
+namespace Microtopia.Api
 {
     // TODO implement IRequestHandler<IRequest> for response
     public class DummyCommandAndEventSink : INotificationHandler<INotification>,

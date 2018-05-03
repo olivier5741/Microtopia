@@ -6,10 +6,13 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
+      <PackageReference Include="EasyNetQ" Version="2.3.1"/>
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="4.1.0"/>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
       <PackageReference Include="ServiceStack.OrmLite" Version="5.0.2"/>
+      <PackageReference Include="ServiceStack.OrmLite.Sqlite" Version="5.0.2"/>
       <PackageReference Include="ServiceStack.Text" Version="5.0.2"/>
+      <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.4.0"/>
     <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="2.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="2.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="2.4.0" />
